@@ -33,7 +33,7 @@ export default {
 
       await sendTelegramMessage(
         chatId,
-        "Произошла ошибка при обращении к AI.",
+        "Произошла ошибка при обращении к AI. ${error.message}",
         env
       );
 
