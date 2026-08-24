@@ -21,10 +21,25 @@ export default {
     if(text==="/start") {
       await sendTelegramMessage(chatId, greeting, env);
       }
-      else{
-    await sendTelegramMessage(chatId, `Ты написал: ${text}`, env);
+    try {
+
+      const answer = await askGroq(text, env);
+      await sendTelegramMessage(chatId, answer, env);
+      return new Response("OK");
+
+    } catch (error) {
+
+      console.error(error);
+
+      await sendTelegramMessage(
+        chatId,
+        "Произошла ошибка при обращении к AI.",
+        env
+      );
+
+      return new Response("Error", { status: 500 });
+
     }
 
-    return new Response("OK");
   }
 };
