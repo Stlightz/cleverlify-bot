@@ -18,8 +18,11 @@ export default {
     
 
     if(text==="/start") {
-      await sendTelegramMessage
+      await sendTelegramMessage(chatId, greeting, env);
+      }
+      else{
     await sendTelegramMessage(chatId, `Ты написал: ${text}`, env);
+    }
 
     return new Response("OK");
   }
