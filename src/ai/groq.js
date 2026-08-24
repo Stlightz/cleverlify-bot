@@ -25,8 +25,12 @@ export async function askGroq(message, env) {
   );
 
   if (!response.ok) {
-    throw new Error(`Groq API error: ${response.status}`);
-  }
+  const errorText = await response.text();
+
+  throw new Error(
+    `Groq API ${response.status}:\n${errorText}`
+  );
+}
 
   const data = await response.json();
 
