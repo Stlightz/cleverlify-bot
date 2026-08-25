@@ -19,7 +19,7 @@ export async function askGroq(chatId, text, env) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${env.groq_key}`,
+        Authorization: `Bearer ${env.GROQ_KEY}`,
       },
       body: JSON.stringify({
         model: "openai/gpt-oss-120b",
