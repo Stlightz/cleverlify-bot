@@ -1,38 +1,46 @@
-export async function askGroq(message, env) {
+import { getHistory, addMessage } from "./history.js";
+
+export async function askGroq(chatId, text, env) {
+  addMessage(chatId, "user", text);
+
+  const history = getHistory(chatId);
+
+  const messages = [
+    {
+      role: "system",
+      content: "Ты полезный AI-ассистент в Telegram.",
+    },
+    ...history,
+  ];
+
   const response = await fetch(
     "https://api.groq.com/openai/v1/chat/completions",
     {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${env.GROQ_KEY}`
+        Authorization: `Bearer ${env.groq_key}`,
       },
       body: JSON.stringify({
         model: "openai/gpt-oss-120b",
-        messages: [
-          {
-            role: "system",
-            content: "Ты полезный Telegram-ассистент."
-          },
-          {
-            role: "user",
-            content: message
-          }
-        ],
-        temperature: 0.7
-      })
+        messages,
+      }),
     }
   );
 
-  if (!response.ok) {
-  const errorText = await response.text();
-
-  throw new Error(
-    `Groq API ${response.status}:\n${errorText}`
-  );
-}
-
   const data = await response.json();
 
-  return data.choices?.[0]?.message?.content || "Не удалось получить ответ.";
+  if (!response.ok) {
+    throw new Error(
+      `Groq API ${response.status}: ${
+        data.error?.message || "Unknown error"
+      }`
+    );
+  }
+
+  const answer = data.choices[0].message.content;
+
+  addMessage(chatId, "assistant", answer);
+
+  return answer;
 }
