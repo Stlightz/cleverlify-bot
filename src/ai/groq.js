@@ -8,7 +8,7 @@ export async function askGroq(chatId, text, env) {
   const messages = [
     {
       role: "system",
-      content: "Ты отвечаешь в Telegram.
+      content: `Ты отвечаешь в Telegram.
 
 Форматирование:
 - Используй Telegram HTML.
@@ -32,7 +32,7 @@ export async function askGroq(chatId, text, env) {
 • Этика — справедливость, милосердие и честность.
 
 <b>Вывод</b>
-Краткий вывод здесь.",
+Краткий вывод здесь.`,
     },
     ...history,
   ];
