@@ -38,7 +38,7 @@ export async function askGroq(chatId, text, env) {
     );
   }
   
-  #лол
+  
 
   const answer = data.choices[0].message.content;
 
