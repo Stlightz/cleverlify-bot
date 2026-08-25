@@ -23,7 +23,7 @@ export default {
       }
     try {
 
-      const answer = await askGroq(text, env);
+      const answer = await askGroq(chatId,text, env);
       await sendTelegramMessage(chatId, answer, env);
       return new Response("OK");
 
