@@ -20,6 +20,7 @@ export default {
 
     if(text==="/start") {
       await sendTelegramMessage(chatId, greeting, env);
+      return new Response("OK");
       }
     try {
 
