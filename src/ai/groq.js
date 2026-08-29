@@ -1,5 +1,60 @@
 import { getHistory, addMessage } from "./history.js";
 
+export async function shouldSearch(text, env) {
+  const response = await fetch(
+    "https://api.groq.com/openai/v1/chat/completions",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${env.GROQ_KEY}`,
+      },
+      body: JSON.stringify({
+        model: "openai/gpt-oss-120b",
+        temperature: 0,
+        messages: [
+          {
+            role: "system",
+            content: `Определи, нужен ли веб-поиск для ответа на сообщение пользователя.
+
+Поиск нужен, если вопрос требует актуальной, свежей или конкретной информации из интернета.
+
+Поиск не нужен, если на вопрос можно ответить на основе общих знаний.
+
+Верни ТОЛЬКО JSON:
+{
+  "need_search": true,
+  "search_query": "поисковый запрос"
+}
+
+Если поиск не нужен:
+{
+  "need_search": false,
+  "search_query": ""
+}`,
+          },
+          {
+            role: "user",
+            content: text,
+          },
+        ],
+      }),
+    }
+  );
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      `Groq search decision ${response.status}: ${
+        data.error?.message || "Unknown error"
+      }`
+    );
+  }
+
+  return JSON.parse(data.choices[0].message.content);
+}
+
 export async function askGroq(chatId, text, env) {
   addMessage(chatId, "user", text);
 
