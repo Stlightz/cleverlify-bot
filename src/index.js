@@ -23,6 +23,16 @@ export default {
       return new Response("OK");
       }
     try {
+const decision = await shouldSearch(text, env);
+
+await sendTelegramMessage(
+  chatId,
+  `🔎 <b>Search decision</b>
+
+need_search: <code>${decision.need_search}</code>
+search_query: <code>${decision.search_query || "—"}</code>`,
+  env
+);
 
       const answer = await askGroq(chatId,text, env);
       await sendTelegramMessage(chatId, answer, env);
