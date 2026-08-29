@@ -1,5 +1,5 @@
 import { sendTelegramMessage } from "./telegram/api.js";
-import { askGroq } from "./ai/groq.js";
+import { askGroq , shouldSearch } from "./ai/groq.js";
 
 const greeting =
 `Добро пожаловать в Cleverlify!
